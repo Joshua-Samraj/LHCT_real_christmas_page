@@ -1,0 +1,106 @@
+body {
+    background-color: #141414;
+    color: white;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* --- MASONRY LAYOUT SETUP --- */
+.hero-grid-container {
+    /* Mobile: Start small/dense */
+    column-count: 5;
+    column-gap: 4px;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    padding-bottom: 100px;
+    min-height: 100vh;
+    align-content: start;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+    .hero-grid-container {
+        column-count: 10;
+    }
+}
+
+/* Desktop: Mosaic */
+@media (min-width: 1024px) {
+    .hero-grid-container {
+        column-count: 20;
+    }
+}
+
+/* THE TILE CONTAINER */
+.grid-cell {
+    break-inside: avoid;
+    margin-bottom: 4px;
+    position: relative;
+    cursor: pointer;
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.8) translate(0, 0);
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+    will-change: transform;
+}
+
+.grid-cell img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 2px;
+}
+
+.grid-cell:hover {
+    transform: scale(1.5);
+    z-index: 50;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+    outline: 2px solid white;
+    transition-delay: 0.1s;
+}
+
+.grid-cell.loaded {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ACTIVE POP STATE */
+.grid-cell.active-pop {
+    z-index: 100;
+    box-shadow: 0 50px 100px -12px rgba(0, 0, 0, 1);
+    outline: 1px solid #D42426;
+    transition-delay: 0s !important;
+}
+
+/* --- MOBILE SCROLL EFFECTS --- */
+.impact-card {
+    transition: all 0.5s ease;
+}
+
+.impact-card.mobile-active {
+    border-color: var(--card-color) !important;
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.impact-card.mobile-active .icon-box {
+    background-color: var(--card-color) !important;
+}
+
+/* --- IMAGE SCROLL REVEAL --- */
+.scroll-reveal-img {
+    transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+    filter: grayscale(100%);
+    transform: scale(1);
+}
+
+.scroll-reveal-img.mobile-active {
+    filter: grayscale(0%) !important;
+    transform: scale(1.05);
+    box-shadow: 0 20px 50px -10px rgba(212, 36, 38, 0.3);
+}
