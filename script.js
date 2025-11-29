@@ -32,7 +32,7 @@ function shuffleArray(array) {
 // --- PIXEL LOADING GRID ---
 function initGrid() {
     const grid = document.getElementById('hero-grid');
-    const totalGridSlots = 100;
+    const totalGridSlots = 50;
     const availableImages = 14;
     const cells = [];
 
@@ -184,7 +184,7 @@ async function startSlideshow() {
             const scaleH = (window.innerHeight * 0.80) / rect.height;
             let finalScale = Math.min(scaleW, scaleH);
             if (finalScale < 1.2) finalScale = 1.2;
-            if (finalScale > 25) finalScale = 25;
+            if (finalScale > 25) finalScale = 15;
 
             currentCell.style.transform = `translate(${moveX}px, ${moveY}px) scale(${finalScale})`;
             currentCell.classList.add('active-pop');
