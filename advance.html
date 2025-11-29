@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Christmas | The Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        christmas: { red: '#D42426', green: '#165B33', gold: '#F8B229' },
+                        netflix: { black: '#141414', dark: '#181818', red: '#E50914' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+<style>
+    body { background-color: #141414; color: white; }
+    html { scroll-behavior: smooth; }
+    
+    /* --- CONTAINED GALLERY SECTION --- */
+    .gallery-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        /* Desktop Default Height */
+        height: 50vh;      
+        min-height: 30px;
+        background: #000;
+        border: 1px solid #333;
+        border-radius: 12px;
+        overflow-y: auto;  
+        position: relative; 
+        box-shadow: inset 0 0 50px rgba(0,0,0,0.9);
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    /* --- THE OVERLAY (Using ::before to sit on top of scroll) --- */
+    .gallery-wrapper::before {
+        content: '';
+        /* Sticky makes it stay in view while you scroll */
+        position: sticky; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        
+        /* Height must match the wrapper height */
+        height: 50vh; 
+        
+        /* Pull the grid up so it sits UNDER this overlay */
+        margin-bottom: -50vh; 
+        
+        display: block;
+        pointer-events: none; /* Allows clicks to pass through to images */
+        
+        /* THE IMAGE OVERLAY */
+        background-image: url('assets/real.png'); 
+        background-size: 50%;
+        
+        background-position: bottom;
+        background-size: contain; /* Keeps the whole image visible */
+        background-repeat: no-repeat;
+        
+        /* Optional: Darken background slightly to make pop clearer */
+        background-color: rgba(0,0,0,0.2); 
+        /* opacity: 0.5; */
+        z-index: 10; /* Level 2: Sits ON TOP of default images */
+    }
+
+    /* Mobile Height Adjustments */
+    @media (max-width: 1023px) {
+        .gallery-wrapper { height: 65vh; }
+        
+        /* Update overlay to match mobile height */
+        .gallery-wrapper::before { 
+            height: 65vh; 
+            margin-bottom: -65vh;
+        }
+    }
+
+    .gallery-wrapper::-webkit-scrollbar { width: 8px; }
+    .gallery-wrapper::-webkit-scrollbar-track { background: #111; }
+    .gallery-wrapper::-webkit-scrollbar-thumb { background: #D42426; border-radius: 4px; }
+
+    /* --- MASONRY LAYOUT --- */
+    .hero-grid-container {
+        column-count: 12; /* Mobile friendly */
+        column-gap: 4px; 
+        width: 100%;
+        padding: 5px; 
+        box-sizing: border-box;
+        padding-bottom: 100px;
+    }
+
+    @media (min-width: 640px) { .hero-grid-container { column-count: 6; } }
+    @media (min-width: 1024px) { .hero-grid-container { column-count: 15; padding: 10px; } }
+
+    .grid-cell {
+        break-inside: avoid; 
+        margin-bottom: 4px;
+        position: relative; 
+        cursor: pointer;
+        border-radius: 2px;
+        overflow: hidden;
+        opacity: 0;
+        transform: scale(0.8) translate(0,0);
+        transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease; 
+        will-change: transform;
+        
+        z-index: 1; /* Level 1: Default (Below Overlay) */
+    }
+
+    /* --- 1. DEFAULT BLURRED STATE --- */
+    .grid-cell img { 
+        width: 100%; 
+        height: auto; 
+        display: block; 
+        border-radius: 2px;
+        /* filter: blur(3px) grayscale(50%) brightness(0.6);  */
+        transition: filter 0.5s ease, transform 0.5s ease;
+    }
+
+    /* --- HOVER STATE (Desktop Only) --- */
+    @media (hover: hover) {
+        .grid-cell:hover {
+            transform: scale(1.5); 
+            z-index: 50; /* Level 3: Pops ABOVE Overlay */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+            outline: 2px solid white; 
+            transition-delay: 0.1s;
+        }
+        
+        .grid-cell:hover img {
+            filter: blur(0) grayscale(0%) brightness(1);
+        }
+    }
+
+    .grid-cell.loaded { opacity: 1; transform: scale(1); }
+    
+    /* --- 3. ACTIVE POP STATE (Auto Play) --- */
+    .grid-cell.active-pop {
+        z-index: 50; /* Level 3: Pops ABOVE Overlay */
+        box-shadow: 0 50px 100px -12px rgba(0, 0, 0, 1);
+        outline: 0px solid #D42426; 
+        transition-delay: 0s !important; 
+    }
+
+    /* Remove blur when Active Pop */
+    .grid-cell.active-pop img {
+        filter: blur(0) grayscale(0%) brightness(1);
+    }
+
+    /* --- OTHER CSS --- */
+    /* REMOVED MOBILE SENSOR STYLES (Kept base transitions only) */
+    .impact-card { transition: all 0.5s ease; }
+    
+    /* Updated: Removed grayscale filter so image is always visible */
+    .scroll-reveal-img {
+        transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+        /* filter: grayscale(100%);  <-- REMOVED THIS */
+        transform: scale(1);
+    }
+
+    /* Mobile Height Adjustments */
+    @media (max-width: 1023px) {
+        .gallery-wrapper { height: 65vh; }
+        
+        /* Update overlay to match mobile height */
+        .gallery-wrapper::before { 
+            height: 65vh; 
+            margin-bottom: -65vh;
+
+            /* --- ADD THIS LINE --- */
+            background-size: 70%;  
+            /* 30% makes it smaller on mobile. Increase/Decrease as needed. */
+        }
+    }
+</style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <nav class="fixed w-full z-[70] bg-black/90 backdrop-blur-sm transition-all duration-300 border-b border-gray-800/50" id="navbar">
+        <div class="px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="assets/logo.jpg" alt="RC Logo" class="h-10 md:h-12 w-auto object-contain rounded-md">
+                <span class="font-bold text-xl md:text-2xl tracking-tighter text-christmas-red uppercase">Real Christmas</span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-gray-300">
+                <a href="#hero-grid" class="hover:text-white transition">The Gallery</a>
+                <a href="#mission" class="hover:text-white transition">Our Mission</a>
+                <a href="#donation" class="hover:text-white transition" style="color: #D42426; font-weight: bold;">Donate</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="mobile-menu-btn" class="md:hidden text-white text-2xl focus:outline-none p-1">
+                    <i class="fa-solid fa-bars transition-transform duration-300"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-t border-gray-800 transition-all duration-300 shadow-2xl">
+            <div class="flex flex-col items-center py-8 gap-6 text-lg font-medium text-gray-200">
+                <a href="#hero-grid" class="hover:text-christmas-red w-full text-center py-2" onclick="toggleMobileMenu()">The Gallery</a>
+                <a href="#mission" class="hover:text-christmas-red w-full text-center py-2" onclick="toggleMobileMenu()">Our Mission</a>
+                <button class="text-christmas-red font-bold w-full text-center py-2" onclick="toggleMobileMenu(); openDonateModal()">Donate Now</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 pt-24 pb-12">
+        <div class="px-8 mb-6 flex flex-col md:flex-row justify-between items-end gap-4 max-w-7xl mx-auto">
+            <div>
+                <h1 class="text-3xl font-bold mb-2">Moments of Joy</h1>
+                <p class="text-gray-400 text-sm">A collection of 100 smiles. Scroll inside to explore.</p>
+            </div>
+            <div class="flex gap-3">
+                <button id="btn-start" onclick="userClickStart()" class="hidden bg-white text-black px-6 py-2 rounded font-bold hover:bg-gray-200 transition flex items-center gap-2">
+                    <i class="fa-solid fa-play"></i> Auto Play
+                </button>
+                <button id="btn-stop" onclick="userClickStop()" class="bg-red-600 text-white px-6 py-2 rounded font-bold hover:bg-red-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-stop"></i> Stop
+                </button>
+            </div>
+        </div>
+
+        <div class="px-4">
+            <div id="gallery-wrapper" class="gallery-wrapper">
+                <div id="hero-grid" class="hero-grid-container">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section id="mission" class="relative z-20 bg-[#141414] py-24 px-8 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
+            <div class="w-full md:w-1/2">
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-christmas-red/20 blur-xl rounded-full"></div>
+                    <img src="assets/blind.jpeg" class="scroll-reveal-img relative rounded-lg shadow-2xl grayscale hover:grayscale-0" alt="Child holding light">
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 space-y-6">
+                <h4 class="text-christmas-gold font-bold uppercase tracking-widest text-sm">Our Philosophy</h4>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white leading-tight">Christmas Beyond <br> <span class="text-christmas-red">The Tinsel</span></h2>
+                <p class="text-gray-400 text-lg font-light leading-relaxed">While the world lights up with decorations, thousands of families in our own city sit in darkness.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="relative z-20 bg-[#181818] py-24 px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">The Bundle of Hope</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Every donation translates directly into a comprehensive care package.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="impact-card bg-[#141414] p-8 rounded-lg border border-gray-800 hover:border-christmas-red transition duration-300 group" style="--card-color: #D42426;">
+                    <div class="icon-box w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mb-6 group-hover:bg-christmas-red transition"><i class="fa-solid fa-bowl-rice text-white text-xl"></i></div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Sustenance (Ration)</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">25kg of premium rice, oils, lentils, and spices.</p>
+                </div>
+                <div class="impact-card bg-[#141414] p-8 rounded-lg border border-gray-800 hover:border-christmas-gold transition duration-300 group" style="--card-color: #F8B229;">
+                    <div class="icon-box w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mb-6 group-hover:bg-christmas-gold transition"><i class="fa-solid fa-shirt text-white text-xl"></i></div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Dignity (Clothing)</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">New clothes for the children and blankets for the elders.</p>
+                </div>
+                <div class="impact-card bg-[#141414] p-8 rounded-lg border border-gray-800 hover:border-christmas-green transition duration-300 group" style="--card-color: #165B33;">
+                    <div class="icon-box w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mb-6 group-hover:bg-christmas-green transition"><i class="fa-solid fa-child-reaching text-white text-xl"></i></div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Joy (Celebration)</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Sweets, a Christmas cake, and small toys.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="donation" class="relative z-20 bg-gradient-to-b from-[#141414] to-black py-24 px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-5xl font-extrabold text-white mb-2">Our 2025 Mission</h2>
+            <p class="text-christmas-gold text-xl font-medium mb-12">Target: ₹1,80,000 / 100 Families</p>
+            <div class="relative w-full h-6 bg-gray-800 rounded-full overflow-hidden mb-8">
+                <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-christmas-red to-christmas-gold w-[2%]"></div>
+            </div>
+            <div class="flex justify-between items-end text-gray-400 text-sm mb-12">
+                <span>0 Families</span>
+                <span class="text-white text-2xl font-bold">2 Families Reached</span>
+                <span>100 Families</span>
+            </div>
+            <div class="p-8 border border-gray-800 rounded-xl bg-gray-900/50">
+                <p class="text-xl text-gray-300 italic mb-6">"If you cannot feed a hundred people, then feed just one."</p>
+                <button onclick="openDonateModal()" class="bg-christmas-red text-white text-lg font-bold px-10 py-4 rounded hover:bg-red-700 transition shadow-lg shadow-red-900/20">Sponsor One Family (₹1,000)</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="relative z-20 bg-black py-12 text-center text-gray-600 text-sm border-t border-gray-900">
+        <p>&copy; 2025 Real Christmas Trust. All rights reserved.</p>
+    </footer>
+
+    <div id="modal-overlay" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 flex items-center justify-center p-4 md:p-12 pointer-events-none">
+            <div id="modal-card" class="bg-[#181818] rounded-lg shadow-2xl overflow-hidden max-w-5xl w-full max-h-[90vh] flex flex-col md:flex-row relative opacity-0 scale-95 pointer-events-auto transition-all duration-300">
+                <button onclick="userCloseModal()" class="absolute top-4 right-4 z-50 bg-black/50 hover:bg-white hover:text-black text-white rounded-full w-10 h-10 flex items-center justify-center transition"><i class="fa-solid fa-times"></i></button>
+                <div class="w-full md:w-2/3 bg-black relative flex items-center justify-center">
+                    <img id="modal-image" src="" class="max-w-full max-h-full object-contain">
+                </div>
+                <div class="w-full md:w-1/3 p-8 flex flex-col justify-center border-t md:border-t-0 md:border-l border-gray-800">
+                    <h2 class="text-3xl font-bold mb-4">Image #<span id="modal-id"></span></h2>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">Captured from the field.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="donate-overlay" class="fixed inset-0 z-[150] bg-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div id="donate-card" class="bg-[#181818] rounded-2xl shadow-2xl w-full max-w-3xl border border-gray-700 relative scale-95 opacity-0 transition-all duration-300">
+                <button onclick="closeDonateModal()" class="absolute top-4 right-4 z-50 bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-700 transition"><i class="fa-solid fa-times"></i></button>
+                <div class="p-8 md:p-10">
+                    <h2 class="text-3xl font-bold text-center mb-2">Support a Family</h2>
+                    <p class="text-center text-gray-400 mb-8">Your contribution brings joy to a home.</p>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="flex flex-col items-center bg-white/5 p-6 rounded-xl border border-gray-700">
+                            <img src="https://via.placeholder.com/200x200?text=QR+Code" alt="Payment QR Code" class="rounded-lg mb-4 w-48 h-48 border-4 border-white">
+                            <p class="text-sm text-christmas-gold font-bold uppercase tracking-widest">Scan to Pay</p>
+                            <p class="text-xs text-gray-500 mt-1">UPI / GPay / Paytm</p>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-red"><h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">Account Name</h3><p class="text-lg font-bold text-white">Real Christmas Trust</p></div>
+                            <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-gold"><h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">Account Number</h3><p class="text-lg font-bold text-white tracking-wider">1234 5678 9012</p></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-green"><h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">IFSC Code</h3><p class="text-white font-mono">HDFC000123</p></div>
+                                <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-blue-500"><h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">UPI ID</h3><p class="text-white font-mono">trust@upi</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 text-center">
+                        <p class="text-xs text-gray-500">* All donations are eligible for 80G tax exemption. Please share the screenshot after payment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    let slideIndex = 0;
+    let activeSessionId = 0; 
+    let userManualStop = false; 
+    let isSlideshowRunning = false; 
+    
+    // NEW: Variable to track if user is currently scrolling
+    let isUserScrolling = false; 
+    let scrollEndTimeout;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initGrid();
+        initScrollObserver(); 
+        // REMOVED: initMobileScrollEffects(); <--- DELETED THIS LINE
+        initMobileMenu();
+        
+        // --- OPTIMIZED SCROLL LISTENER ---
+        window.addEventListener('scroll', () => {
+            // 1. Tell the slideshow to PAUSE calculations immediately
+            isUserScrolling = true;
+
+            // 2. Handle Navbar (Throttled)
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.remove('bg-gradient-to-b');
+                nav.classList.add('bg-black');
+            } else {
+                nav.classList.add('bg-gradient-to-b');
+                nav.classList.remove('bg-black');
+            }
+
+            // 3. Detect when scrolling STOPS
+            clearTimeout(scrollEndTimeout);
+            scrollEndTimeout = setTimeout(() => {
+                // User hasn't scrolled for 150ms, so they must be done
+                isUserScrolling = false; 
+            }, 150);
+        });
+    });
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initGrid() {
+        const grid = document.getElementById('hero-grid');
+        const totalGridSlots = 100; 
+        const availableImages = 41; 
+        const cells = []; 
+
+        for(let i = 0; i < totalGridSlots; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('grid-cell');
+            const imageIndex = (i % availableImages) + 1;
+            const imgUrl = `images/(${imageIndex}).webp`;
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            img.alt = "Gallery Image " + imageIndex;
+            img.loading = "lazy";
+            
+            cell.dataset.id = i + 1;
+            cell.appendChild(img);
+            
+            cell.onclick = (e) => {
+                // userClickStop(); 
+                openNetflixModal(cell, imgUrl, i + 1);
+            };
+            
+            grid.appendChild(cell);
+            cells.push(cell); 
+        }
+
+        let indices = Array.from({length: totalGridSlots}, (_, i) => i);
+        indices = shuffleArray(indices);
+        indices.forEach((cellIndex, timeIndex) => {
+            const cell = cells[cellIndex];
+            setTimeout(() => { cell.classList.add('loaded'); }, timeIndex * 20); 
+        });
+    }
+
+    // --- OPTIMIZED SLIDESHOW FUNCTION ---
+    async function startSlideshow() {
+        if (isSlideshowRunning) return;
+        
+        killCurrentSession();
+        const mySessionId = activeSessionId; 
+        isSlideshowRunning = true; 
+        
+        document.getElementById('btn-start').classList.add('hidden');
+        document.getElementById('btn-stop').classList.remove('hidden');
+        
+        const cells = document.querySelectorAll('.grid-cell');
+        const container = document.getElementById('gallery-wrapper');
+        
+        if(cells.length === 0) { isSlideshowRunning = true; return; }
+
+        while (true) {
+            // STOP Condition
+            if (mySessionId !== activeSessionId) { isSlideshowRunning = false; return; }
+            
+            // --- CRITICAL FIX: PAUSE IF SCROLLING ---
+            // If the user is scrolling, we DO NOT run getBoundingClientRect.
+            // We wait 200ms and try again. This prevents the lag.
+            if (isUserScrolling) {
+                await new Promise(r => setTimeout(r, 200));
+                continue; // Skip the rest of the loop and start over
+            }
+
+            if (slideIndex >= cells.length) slideIndex = 0; 
+            
+            const currentCell = cells[slideIndex];
+            
+            // Heavy Calculations (Only run if NOT scrolling)
+            const containerRect = container.getBoundingClientRect();
+            const rect = currentCell.getBoundingClientRect();
+
+            const isInsideContainer = (rect.top >= containerRect.top) && (rect.bottom <= containerRect.bottom);
+            
+            let isActuallyOnScreen = false;
+            if (isInsideContainer) {
+                 isActuallyOnScreen = (rect.top >= 0) && (rect.bottom <= window.innerHeight);
+            }
+
+            if (isInsideContainer && isActuallyOnScreen) {
+                const containerCenterX = containerRect.left + (containerRect.width / 2);
+                const containerCenterY = containerRect.top + (containerRect.height / 2);
+                const cellCenterX = rect.left + (rect.width / 2);
+                const cellCenterY = rect.top + (rect.height / 2);
+
+                const moveX = containerCenterX - cellCenterX;
+                const moveY = containerCenterY - cellCenterY;
+
+                const scaleW = (containerRect.width * 0.90) / rect.width;
+                const scaleH = (containerRect.height * 0.90) / rect.height;
+                let finalScale = Math.min(scaleW, scaleH);
+
+                if (finalScale < 1.2) finalScale = 1.2; 
+                if (finalScale > 12) finalScale = 12; 
+
+                currentCell.style.transform = `translate(${moveX}px, ${moveY - 130}px) scale(${finalScale})`;
+                currentCell.classList.add('active-pop');
+
+                await new Promise(r => setTimeout(r, 2000));
+
+                if (mySessionId !== activeSessionId) { 
+                    resetCell(currentCell); 
+                    isSlideshowRunning = false; 
+                    return; 
+                }
+                
+                resetCell(currentCell);
+                await new Promise(r => setTimeout(r, 200));
+            }
+
+            slideIndex++;
+            
+            if (!isInsideContainer) await new Promise(r => setTimeout(r, 60)); 
+        }
+    }
+
+    function initScrollObserver() {
+        const wrapper = document.getElementById('gallery-wrapper');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!userManualStop && !isSlideshowRunning) startSlideshow();
+                } else {
+                    if (isSlideshowRunning) {
+                        killCurrentSession();
+                        resetAllTransforms();
+                    }
+                }
+            });
+        }, { threshold: 0.1 }); 
+        observer.observe(wrapper);
+    }
+
+    function userClickStart() { 
+        userManualStop = false; 
+        if(!isSlideshowRunning) startSlideshow(); 
+    }
+    
+    function userClickStop() { 
+        userManualStop = true; 
+        stopSlideshow(); 
+    }
+    
+    function killCurrentSession() { activeSessionId++; }
+
+    function resetCell(cell) { cell.style.transform = ''; cell.classList.remove('active-pop'); }
+    function resetAllTransforms() { document.querySelectorAll('.grid-cell').forEach(cell => resetCell(cell)); }
+    
+    function stopSlideshow() {
+        killCurrentSession();
+        document.getElementById('btn-start').classList.remove('hidden');
+        document.getElementById('btn-stop').classList.add('hidden');
+        resetAllTransforms();
+        setTimeout(() => { isSlideshowRunning = false; }, 100);
+    }
+
+    // Modal & Menu Logic
+    function openDonateModal() {
+        userClickStop();
+        const overlay = document.getElementById('donate-overlay');
+        const card = document.getElementById('donate-card');
+        document.body.style.overflow = 'hidden'; 
+        overlay.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            overlay.classList.remove('opacity-0');
+            card.classList.remove('opacity-0', 'scale-95');
+            card.classList.add('scale-100');
+        });
+    }
+    function closeDonateModal() {
+        const overlay = document.getElementById('donate-overlay');
+        const card = document.getElementById('donate-card');
+        overlay.classList.add('opacity-0');
+        card.classList.add('opacity-0', 'scale-95');
+        card.classList.remove('scale-100');
+        setTimeout(() => { overlay.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300);
+    }
+    function openNetflixModal(cell, imgUrl, id) {
+        const overlay = document.getElementById('modal-overlay');
+        const card = document.getElementById('modal-card');
+        const modalImg = document.getElementById('modal-image');
+        document.getElementById('modal-id').innerText = id;
+        modalImg.src = imgUrl;
+        document.body.style.overflow = 'hidden';
+        overlay.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            overlay.classList.remove('opacity-0');
+            card.classList.remove('opacity-0', 'scale-95');
+            card.classList.add('scale-100');
+        });
+    }
+    function userCloseModal() {
+        const overlay = document.getElementById('modal-overlay');
+        const card = document.getElementById('modal-card');
+        overlay.classList.add('opacity-0');
+        card.classList.add('opacity-0', 'scale-95');
+        card.classList.remove('scale-100');
+        setTimeout(() => { overlay.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300);
+    }
+    function initMobileMenu() {
+        const btn = document.getElementById('mobile-menu-btn');
+        btn.onclick = () => toggleMobileMenu();
+    }
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.querySelector('#mobile-menu-btn i');
+        menu.classList.toggle('hidden');
+        if (menu.classList.contains('hidden')) { icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); } 
+        else { icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); }
+    }
+    
+    // REMOVED: initMobileScrollEffects() function definition was here.
+</script>
+</body>
+</html>
