@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Montserrat:wght@800;900&family=Road+Rage&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -20,141 +25,209 @@
             }
         }
     </script>
-    
-<style>
-    body { background-color: #141414; color: white; }
-    html { scroll-behavior: smooth; }
-    
-    /* --- SLIDER STYLES --- */
-    .slider-container {
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-        border-radius: 12px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        border: 1px solid #333;
-    }
 
-    .slides-wrapper {
-        display: flex;
-        height: 100%;
-        transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-    }
+    <style>
+        body {
+            background-color: #141414;
+            color: white;
+        }
 
-    .slide {
-        min-width: 100%;
-        height: 100%;
-        position: relative;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; 
-        object-position: center;
-    }
+        /* --- SLIDER STYLES --- */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+        }
 
-    .slide::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 40%;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    }
+        .slides-wrapper {
+            display: flex;
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
 
-    /* Navigation Buttons */
-    .nav-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0,0,0,0.5);
-        color: white;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255,255,255,0.1);
-        z-index: 10;
-    }
-    .nav-btn:hover { background: #D42426; border-color: #D42426; }
-    .prev-btn { left: 20px; }
-    .next-btn { right: 20px; }
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
 
-    /* Dots */
-    .dots-container {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-        z-index: 10;
-    }
-    .dot {
-        width: 10px;
-        height: 10px;
-        background: rgba(255,255,255,0.3);
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    .dot.active { background: #D42426; transform: scale(1.2); }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
 
-    /* --- MOBILE SENSOR EFFECTS --- */
-    .impact-card { transition: all 0.5s ease; }
-    
-    .impact-card.mobile-active {
-        border-color: var(--card-color) !important;
-        transform: scale(1.03);
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.7);
-        background-color: #1a1a1a;
-    }
-    
-    .impact-card.mobile-active .icon-box {
-        background-color: var(--card-color) !important;
-    }
+        .slide::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        }
 
-    .scroll-reveal-img {
-        transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
-        transform: scale(1);
-        filter: grayscale(100%); 
-    }
+        /* Navigation Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
 
-    .scroll-reveal-img.mobile-active {
-        filter: grayscale(0%) !important;
-        transform: scale(1.05);
-        box-shadow: 0 20px 50px -10px rgba(212, 36, 38, 0.2);
-    }
+        .nav-btn:hover {
+            background: #D42426;
+            border-color: #D42426;
+        }
 
-    /* Modal Image Style */
-    .kit-image {
-        max-height: 85vh;
-        max-width: 100%;
-        object-fit: contain;
-        border-radius: 8px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    }
-</style>
+        .prev-btn {
+            left: 20px;
+        }
+
+        .next-btn {
+            right: 20px;
+        }
+
+        /* Dots */
+        .dots-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #D42426;
+            transform: scale(1.2);
+        }
+
+        /* --- MOBILE SENSOR EFFECTS --- */
+        .impact-card {
+            transition: all 0.5s ease;
+        }
+
+        .impact-card.mobile-active {
+            border-color: var(--card-color) !important;
+            transform: scale(1.03);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.7);
+            background-color: #1a1a1a;
+        }
+
+        .impact-card.mobile-active .icon-box {
+            background-color: var(--card-color) !important;
+        }
+
+        .scroll-reveal-img {
+            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: scale(1);
+            filter: grayscale(100%);
+        }
+
+        .real-logo {
+            width: 200px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            
+        }
+
+        .scroll-reveal-img.mobile-active {
+            filter: grayscale(0%) !important;
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px -10px rgba(212, 36, 38, 0.2);
+        }
+
+        /* Modal Image Style */
+        .kit-image {
+            max-height: 85vh;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- SNOWFALL EFFECT --- */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            border-radius: 50%;
+            background-color: white;
+            pointer-events: none; /* Allows clicking through the snow */
+            animation: fall linear infinite;
+        }
+
+        /* Background Snow (More density, smaller, slower) */
+        .snow-bg {
+            z-index: 30; /* Above section backgrounds, below foreground items */
+            filter: blur(1px);
+        }
+
+        /* Foreground Snow (Less density, larger, faster) */
+        .snow-fg {
+            z-index: 60; /* Above most content, below Navbar */
+            filter: blur(2px);
+            box-shadow: 0 0 5px white;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translate3d(var(--start-x), -10vh, 0);
+            }
+            100% {
+                transform: translate3d(var(--end-x), 110vh, 0);
+            }
+        }
+    </style>
 </head>
+
 <body class="antialiased min-h-screen flex flex-col">
 
-    <nav class="fixed w-full z-[70] bg-black/90 backdrop-blur-sm transition-all duration-300 border-b border-gray-800/50" id="navbar">
+    <nav class="fixed w-full z-[70] bg-black/90 backdrop-blur-sm transition-all duration-300 border-b border-gray-800/50"
+        id="navbar">
         <div class="px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <img src="assets/logo.jpg" alt="RC Logo" class="h-10 md:h-12 w-auto object-contain rounded-md">
-                <span class="font-bold text-xl md:text-2xl tracking-tighter text-christmas-red uppercase">Real Christmas</span>
+                <span class="font-bold text-xl md:text-2xl tracking-tighter text-christmas-white uppercase">Living <span
+                        class=" font-bold text-xl md:text-2xl tracking-tighter  uppercase text-christmas-red">Hope</span>
+                    Charitable Trust</span>
             </div>
             <div class="hidden md:flex gap-8 text-sm font-medium text-gray-300">
                 <a href="#gallery-section" class="hover:text-white transition">The Gallery</a>
                 <a href="#mission" class="hover:text-white transition">Our Mission</a>
-                <a href="#donation" class="hover:text-white transition" style="color: #D42426; font-weight: bold;">Donate</a>
+                <a href="#donation" class="hover:text-white transition"
+                    style="color: #D42426; font-weight: bold;">Donate</a>
             </div>
             <div class="flex items-center gap-4">
                 <button id="mobile-menu-btn" class="md:hidden text-white text-2xl focus:outline-none p-1">
@@ -162,27 +235,40 @@
                 </button>
             </div>
         </div>
-        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-t border-gray-800 transition-all duration-300 shadow-2xl">
+        <div id="mobile-menu"
+            class="hidden md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-t border-gray-800 transition-all duration-300 shadow-2xl">
             <div class="flex flex-col items-center py-8 gap-6 text-lg font-medium text-gray-200">
-                <a href="#gallery-section" class="hover:text-christmas-red w-full text-center py-2" onclick="toggleMobileMenu()">The Gallery</a>
-                <a href="#mission" class="hover:text-christmas-red w-full text-center py-2" onclick="toggleMobileMenu()">Our Mission</a>
-                <button class="text-christmas-red font-bold w-full text-center py-2" onclick="toggleMobileMenu(); openDonateModal()">Donate Now</button>
+                <a href="#gallery-section" class="hover:text-christmas-red w-full text-center py-2"
+                    onclick="toggleMobileMenu()">The Gallery</a>
+                <a href="#mission" class="hover:text-christmas-red w-full text-center py-2"
+                    onclick="toggleMobileMenu()">Our Mission</a>
+                <button class="text-christmas-red font-bold w-full text-center py-2"
+                    onclick="toggleMobileMenu(); openDonateModal()">Donate Now</button>
             </div>
         </div>
     </nav>
 
     <main id="gallery-section" class="relative z-10 pt-28 pb-12">
         <div class="px-8 mb-6 max-w-7xl mx-auto">
-            <h1 class="text-3xl font-bold mb-2">Moments of Joy</h1>
-            <p class="text-gray-400 text-sm">Highlights from our recent drives.</p>
+            <img src="assets/real.png" class="real-logo"alt="">
+            
+            <!-- <div class="mb-4">
+                <h2 class="font-montserrat font-black text-white text-sm md:text-base uppercase tracking-[0.2em] mb-0">Celebrating The</h2>
+                <div class="relative">
+                    <h1 class="font-brush text-christmas-red text-6xl md:text-8xl leading-none -ml-1">Real</h1>
+                    <span class="font-montserrat font-black text-white text-xs md:text-sm uppercase tracking-[0.2em] absolute top-1/2 left-32 md:left-48 -translate-y-1/2">Meaning of</span>
+                </div>
+                <h1 class="font-brush text-christmas-red text-6xl md:text-8xl leading-none -mt-2 md:-mt-4">Christmas</h1>
+            </div> -->
+            <p class="text-gray-400 text-sm mt-4">Highlights from our recent drives.</p>
         </div>
 
         <div class="px-4 md:px-8">
             <div class="max-w-6xl mx-auto h-[300px] md:h-[600px]">
-                
+
                 <div class="slider-container group">
                     <div class="slides-wrapper" id="slides-wrapper">
-                        </div>
+                    </div>
 
                     <button class="nav-btn prev-btn opacity-0 group-hover:opacity-100" onclick="moveSlide(-1)">
                         <i class="fa-solid fa-chevron-left"></i>
@@ -192,7 +278,7 @@
                     </button>
 
                     <div class="dots-container" id="dots-container">
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -203,13 +289,17 @@
             <div class="w-full md:w-1/2">
                 <div class="relative">
                     <div class="absolute -inset-4 bg-christmas-red/20 blur-xl rounded-full"></div>
-                    <img src="assets/blind.jpeg" class="scroll-reveal-img relative rounded-lg shadow-2xl grayscale hover:grayscale-0" alt="Child holding light">
+                    <img src="assets/blind.jpeg"
+                        class="scroll-reveal-img relative rounded-lg shadow-2xl grayscale hover:grayscale-0"
+                        alt="Child holding light">
                 </div>
             </div>
             <div class="w-full md:w-1/2 space-y-6">
                 <h4 class="text-christmas-gold font-bold uppercase tracking-widest text-sm">Our Philosophy</h4>
-                <h2 class="text-4xl md:text-5xl font-extrabold text-white leading-tight">Christmas Beyond <br> <span class="text-christmas-red">The Tinsel</span></h2>
-                <p class="text-gray-400 text-lg font-light leading-relaxed">While the world lights up with decorations, thousands of families in our own city sit in darkness.</p>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white leading-tight">Christmas Beyond <br> <span
+                        class="text-christmas-red">The Tinsel</span></h2>
+                <p class="text-gray-400 text-lg font-light leading-relaxed">While the world lights up with decorations,
+                    thousands of families in our own city sit in darkness.</p>
             </div>
         </div>
     </section>
@@ -218,14 +308,18 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold mb-4">The Bundle of Hope</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">Every donation translates directly into a comprehensive care package.</p>
+                <p class="text-gray-400 max-w-2xl mx-auto">Every donation translates directly into a comprehensive care
+                    package.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <div class="impact-card bg-[#141414] p-8 rounded-lg border border-gray-800 hover:border-christmas-red transition duration-300 group flex flex-col" style="--card-color: #D42426;">
-                    <div class="icon-box w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mb-6 group-hover:bg-christmas-red transition"><i class="fa-solid fa-bowl-rice text-white text-xl"></i></div>
+
+                <div class="impact-card bg-[#141414] p-8 rounded-lg border border-gray-800 hover:border-christmas-red transition duration-300 group flex flex-col"
+                    style="--card-color: #D42426;">
+                    <div
+                        class="icon-box w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mb-6 group-hover:bg-christmas-red transition">
+                        <i class="fa-solid fa-bowl-rice text-white text-xl"></i></div>
                     <h3 class="text-xl font-bold mb-2 text-white">Grocery Kit (₹1800)</h3>
-                    
+
                     <div class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
                         <p class="mb-2">Contains 25+ Essentials:</p>
                         <ul class="list-disc pl-4 text-xs space-y-1 text-gray-500">
@@ -235,81 +329,110 @@
                             <li>Wheat Flour, Ragi & More</li>
                         </ul>
                     </div>
-                    
-                    <button onclick="openKitModal()" class="w-full py-3 rounded bg-white/10 hover:bg-christmas-red text-white font-semibold text-sm transition flex items-center justify-center gap-2 border border-white/20 group-hover:border-transparent">
+
+                    <button onclick="openKitModal()"
+                        class="w-full py-3 rounded bg-white/10 hover:bg-christmas-red text-white font-semibold text-sm transition flex items-center justify-center gap-2 border border-white/20 group-hover:border-transparent">
                         <i class="fa-regular fa-image"></i> View Full Kit List
                     </button>
                 </div>
                 <section id="donation" class="relative z-20 bg-gradient-to-b from-[#141414] to-black py-24 px-8">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-5xl font-extrabold text-white mb-2">Our 2025 Mission</h2>
-            <p class="text-christmas-gold text-xl font-medium mb-12">Target: ₹1,80,000 / 100 Families</p>
-            <div class="relative w-full h-6 bg-gray-800 rounded-full overflow-hidden mb-8">
-                <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-christmas-red to-christmas-gold w-[2%]"></div>
-            </div>
-            <div class="flex justify-between items-end text-gray-400 text-sm mb-12">
-                <span>0 Families</span>
-                <span class="text-white text-2xl font-bold">2 Families Reached</span>
-                <span>100 Families</span>
-            </div>
-            <div class="p-8 border border-gray-800 rounded-xl bg-gray-900/50">
-                <p class="text-xl text-gray-300 italic mb-6">"If you cannot feed a hundred people, then feed just one."</p>
-                <button onclick="openDonateModal()" class="bg-christmas-red text-white text-lg font-bold px-10 py-4 rounded hover:bg-red-700 transition shadow-lg shadow-red-900/20">Sponsor One Family (₹1,000)</button>
+                    <div class="max-w-4xl mx-auto text-center">
+                        <h2 class="text-5xl font-extrabold text-white mb-2">Our 2025 Mission</h2>
+                        <p class="text-christmas-gold text-xl font-medium mb-12">Target: ₹1,80,000 / 100 Families</p>
+                        <div class="relative w-full h-6 bg-gray-800 rounded-full overflow-hidden mb-8">
+                            <div
+                                class="absolute top-0 left-0 h-full bg-gradient-to-r from-christmas-red to-christmas-gold w-[2%]">
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-end text-gray-400 text-sm mb-12">
+                            <span>0 Families</span>
+                            <span class="text-white text-2xl font-bold">2 Families Reached</span>
+                            <span>100 Families</span>
+                        </div>
+                        <div class="p-8 border border-gray-800 rounded-xl bg-gray-900/50">
+                            <p class="text-xl text-gray-300 italic mb-6">"If you cannot feed a hundred people, then feed
+                                just one."</p>
+                            <button onclick="openDonateModal()"
+                                class="bg-christmas-red text-white text-lg font-bold px-10 py-4 rounded hover:bg-red-700 transition shadow-lg shadow-red-900/20">Sponsor
+                                One Family (₹1,000)</button>
+                        </div>
+                    </div>
+                </section>
+
+
+
             </div>
         </div>
     </section>
 
 
-                
-            </div>
-        </div>
-    </section>
-
-    
     <footer class="relative z-20 bg-black py-12 text-center text-gray-600 text-sm border-t border-gray-900">
         <p>&copy; 2025 Real Christmas Trust. All rights reserved.</p>
     </footer>
 
-    <div id="donate-overlay" class="fixed inset-0 z-[150] bg-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div id="donate-overlay"
+        class="fixed inset-0 z-[150] bg-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
         <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div id="donate-card" class="bg-[#181818] rounded-2xl shadow-2xl w-full max-w-3xl border border-gray-700 relative scale-95 opacity-0 transition-all duration-300">
-                <button onclick="closeDonateModal()" class="absolute top-4 right-4 z-50 bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-700 transition"><i class="fa-solid fa-times"></i></button>
+            <div id="donate-card"
+                class="bg-[#181818] rounded-2xl shadow-2xl w-full max-w-3xl border border-gray-700 relative scale-95 opacity-0 transition-all duration-300">
+                <button onclick="closeDonateModal()"
+                    class="absolute top-4 right-4 z-50 bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-700 transition"><i
+                        class="fa-solid fa-times"></i></button>
                 <div class="p-8 md:p-10">
                     <h2 class="text-3xl font-bold text-center mb-2">Support a Family</h2>
                     <p class="text-center text-gray-400 mb-8">Your contribution brings joy to a home.</p>
                     <div class="grid md:grid-cols-2 gap-8 items-center">
                         <div class="flex flex-col items-center bg-white/5 p-6 rounded-xl border border-gray-700">
-                            <img src="assets/qrcode.png" alt="Payment QR Code" class="rounded-lg mb-4 w-48 h-48 border-4 border-white">
+                            <img src="assets/qrcode.png" alt="Payment QR Code"
+                                class="rounded-lg mb-4 w-48 h-48 border-4 border-white">
                             <p class="text-sm text-christmas-gold font-bold uppercase tracking-widest">Scan to Pay</p>
                             <p class="text-xs text-gray-500 mt-1">UPI / GPay / Paytm</p>
                         </div>
                         <div class="space-y-6">
-                            <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-red"><h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">Account Name</h3><p class="text-lg font-bold text-white">Living Hope Charitable Trust</p></div>
-                            <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-gold"><h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">Account Number</h3><p class="text-lg font-bold text-white tracking-wider">925010021372118</p></div>
+                            <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-red">
+                                <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">Account Name</h3>
+                                <p class="text-lg font-bold text-white">Living Hope Charitable Trust</p>
+                            </div>
+                            <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-gold">
+                                <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">Account Number</h3>
+                                <p class="text-lg font-bold text-white tracking-wider">925010021372118</p>
+                            </div>
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-green"><h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">IFSC Code</h3><p class="text-white font-mono">UTIB0002095</p></div>
-                                <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-green"><h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">Branch</h3><p class="text-white font-mono">Palayamkottai</p></div>
+                                <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-green">
+                                    <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">IFSC Code</h3>
+                                    <p class="text-white font-mono">UTIB0002095</p>
+                                </div>
+                                <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-christmas-green">
+                                    <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">Branch</h3>
+                                    <p class="text-white font-mono">Palayamkottai</p>
+                                </div>
                                 <!-- <div class="bg-gray-800/50 p-4 rounded-lg border-l-4 border-blue-500"><h3 class="text-gray-400 text-xs uppercase tracking-widest mb-1">UPI ID</h3><p class="text-white font-mono">trust@upi</p></div> -->
                             </div>
                         </div>
                     </div>
                     <div class="mt-8 text-center">
-                        <p class="text-xs text-gray-500">* All donations are eligible for 80G tax exemption. Please share the screenshot after payment to this number <a href="tel:9500561937">+919500561937</a>.</p>
+                        <p class="text-xs text-gray-500">* All donations are eligible for 80G tax exemption. Please
+                            share the screenshot after payment to this number <a
+                                href="tel:9500561937">+919500561937</a>.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="kit-modal" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300">
+    <div id="kit-modal"
+        class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300">
         <div class="absolute inset-0 flex items-center justify-center p-4" onclick="closeKitModal()">
-            <div class="relative max-w-4xl w-full flex flex-col items-center justify-center" onclick="event.stopPropagation()">
-                <button onclick="closeKitModal()" class="absolute -top-12 right-0 md:-right-12 z-50 bg-white/10 hover:bg-white text-white hover:text-black rounded-full w-10 h-10 flex items-center justify-center transition">
+            <div class="relative max-w-4xl w-full flex flex-col items-center justify-center"
+                onclick="event.stopPropagation()">
+                <button onclick="closeKitModal()"
+                    class="absolute -top-12 right-0 md:-right-12 z-50 bg-white/10 hover:bg-white text-white hover:text-black rounded-full w-10 h-10 flex items-center justify-center transition">
                     <i class="fa-solid fa-times"></i>
                 </button>
-                
-                <img src="assets/christmas grocery kit(1)(1).jpg" alt="Full Grocery Kit List" class="kit-image transform scale-95 transition-transform duration-300" id="kit-image-el">
-                
+
+                <img src="assets/christmas grocery kit(1)(1).jpg" alt="Full Grocery Kit List"
+                    class="kit-image transform scale-95 transition-transform duration-300" id="kit-image-el">
+
                 <div class="mt-4 text-center">
                     <p class="text-gray-400 text-sm">Scan the QR code in the image to donate directly.</p>
                 </div>
@@ -317,172 +440,215 @@
         </div>
     </div>
 
-<script>
-    // --- MANUAL IMAGE CONFIGURATION ---
-    const slideImages = [
-        'images/(4).webp',
-        'images/(14).webp',
-        'images/(3).webp',
-        'images/(20).webp',
-        'images/(23).webp',
-        'images/(1).webp'
-    ];
+    <script>
+        // --- MANUAL IMAGE CONFIGURATION ---
+        const slideImages = [
+            'images/(4).webp',
+            'images/(14).webp',
+            'images/(3).webp',
+            'images/(20).webp',
+            'images/(23).webp',
+            'images/(1).webp'
+        ];
 
-    let currentSlide = 0;
-    let autoPlayInterval;
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        initSlideshow();
-        initMobileMenu();
-        initMobileScrollSensor();
-        
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if(window.scrollY > 50) {
-                nav.classList.remove('bg-black/90');
-                nav.classList.add('bg-black');
-            } else {
-                nav.classList.add('bg-black/90');
-                nav.classList.remove('bg-black');
-            }
-        });
-    });
+        let currentSlide = 0;
+        let autoPlayInterval;
 
-    // --- MOBILE SENSOR LOGIC ---
-    function initMobileScrollSensor() {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.6 
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            initSlideshow();
+            initMobileMenu();
+            initMobileScrollSensor();
+            initSnow();
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('mobile-active');
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    nav.classList.remove('bg-black/90');
+                    nav.classList.add('bg-black');
                 } else {
-                    entry.target.classList.remove('mobile-active');
+                    nav.classList.add('bg-black/90');
+                    nav.classList.remove('bg-black');
                 }
             });
-        }, observerOptions);
-
-        const elements = document.querySelectorAll('.impact-card, .scroll-reveal-img');
-        elements.forEach(el => observer.observe(el));
-    }
-
-    // --- SLIDESHOW LOGIC ---
-    function initSlideshow() {
-        const wrapper = document.getElementById('slides-wrapper');
-        const dotsContainer = document.getElementById('dots-container');
-        
-        slideImages.forEach((imgUrl, index) => {
-            const slideDiv = document.createElement('div');
-            slideDiv.className = 'slide';
-            slideDiv.innerHTML = `<img src="${imgUrl}" alt="Gallery Image ${index + 1}">`;
-            wrapper.appendChild(slideDiv);
-
-            const dot = document.createElement('div');
-            dot.className = `dot ${index === 0 ? 'active' : ''}`;
-            dot.onclick = () => goToSlide(index);
-            dotsContainer.appendChild(dot);
         });
+        // --- SNOWFALL LOGIC ---
+        function initSnow() {
+            const createSnowflake = (type, minSize, maxSize, minDur, maxDur) => {
+                const snow = document.createElement('div');
+                snow.classList.add('snowflake', type);
+                
+                // Random Size
+                const size = Math.random() * (maxSize - minSize) + minSize;
+                snow.style.width = `${size}px`;
+                snow.style.height = `${size}px`;
 
-        startAutoPlay();
-    }
+                // Random Opacity
+                snow.style.opacity = Math.random() * 0.6 + 0.2;
 
-    function updateSlider() {
-        const wrapper = document.getElementById('slides-wrapper');
-        const dots = document.querySelectorAll('.dot');
-        wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-        dots.forEach((dot, index) => {
-            if (index === currentSlide) dot.classList.add('active');
-            else dot.classList.remove('active');
-        });
-    }
+                // Random Positions (Start and End X for diagonal drift)
+                const startX = Math.random() * 100; // 0vw to 100vw
+                const endX = startX + (Math.random() * 20 - 10); // Drift +/- 10vw
+                
+                snow.style.setProperty('--start-x', `${startX}vw`);
+                snow.style.setProperty('--end-x', `${endX}vw`);
 
-    function moveSlide(direction) {
-        currentSlide += direction;
-        if (currentSlide >= slideImages.length) currentSlide = 0;
-        if (currentSlide < 0) currentSlide = slideImages.length - 1;
-        updateSlider();
-        resetAutoPlay();
-    }
+                // Random Duration and Delay
+                const duration = Math.random() * (maxDur - minDur) + minDur;
+                const delay = Math.random() * 5; // Start at different times
+                
+                snow.style.animationDuration = `${duration}s`;
+                snow.style.animationDelay = `-${delay}s`; // Negative delay starts animation immediately mid-way
 
-    function goToSlide(index) {
-        currentSlide = index;
-        updateSlider();
-        resetAutoPlay();
-    }
+                document.body.appendChild(snow);
+            };
 
-    function startAutoPlay() {
-        autoPlayInterval = setInterval(() => {
-            moveSlide(1);
-        }, 4000); 
-    }
+            // 1. Background Layer (MORE snow: 150 particles, Small, Slow)
+            for (let i = 0; i < 150; i++) {
+                createSnowflake('snow-bg', 2, 4, 10, 20); // Size 2-4px, Speed 10-20s
+            }
 
-    function resetAutoPlay() {
-        clearInterval(autoPlayInterval);
-        startAutoPlay();
-    }
+            // 2. Foreground Layer (LESS snow: 20 particles, Big, Fast)
+            for (let i = 0; i < 20; i++) {
+                createSnowflake('snow-fg', 6, 10, 5, 10); // Size 6-10px, Speed 5-10s
+            }
+        }
 
-    // --- MODAL & MENU LOGIC ---
-    function openDonateModal() {
-        const overlay = document.getElementById('donate-overlay');
-        const card = document.getElementById('donate-card');
-        document.body.style.overflow = 'hidden'; 
-        overlay.classList.remove('hidden');
-        requestAnimationFrame(() => {
-            overlay.classList.remove('opacity-0');
-            card.classList.remove('opacity-0', 'scale-95');
-            card.classList.add('scale-100');
-        });
-    }
+        // --- MOBILE SENSOR LOGIC ---
+        function initMobileScrollSensor() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.6
+            };
 
-    function closeDonateModal() {
-        const overlay = document.getElementById('donate-overlay');
-        const card = document.getElementById('donate-card');
-        overlay.classList.add('opacity-0');
-        card.classList.add('opacity-0', 'scale-95');
-        card.classList.remove('scale-100');
-        setTimeout(() => { overlay.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300);
-    }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('mobile-active');
+                    } else {
+                        entry.target.classList.remove('mobile-active');
+                    }
+                });
+            }, observerOptions);
 
-    // --- NEW: KIT MODAL LOGIC ---
-    function openKitModal() {
-        const overlay = document.getElementById('kit-modal');
-        const img = document.getElementById('kit-image-el');
-        document.body.style.overflow = 'hidden';
-        overlay.classList.remove('hidden');
-        
-        requestAnimationFrame(() => {
-            overlay.classList.remove('opacity-0');
-            img.classList.remove('scale-95');
-            img.classList.add('scale-100');
-        });
-    }
+            const elements = document.querySelectorAll('.impact-card, .scroll-reveal-img');
+            elements.forEach(el => observer.observe(el));
+        }
 
-    function closeKitModal() {
-        const overlay = document.getElementById('kit-modal');
-        const img = document.getElementById('kit-image-el');
-        overlay.classList.add('opacity-0');
-        img.classList.remove('scale-100');
-        img.classList.add('scale-95');
-        
-        setTimeout(() => { overlay.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300);
-    }
+        // --- SLIDESHOW LOGIC ---
+        function initSlideshow() {
+            const wrapper = document.getElementById('slides-wrapper');
+            const dotsContainer = document.getElementById('dots-container');
 
-    function initMobileMenu() {
-        const btn = document.getElementById('mobile-menu-btn');
-        btn.onclick = () => toggleMobileMenu();
-    }
+            slideImages.forEach((imgUrl, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                slideDiv.innerHTML = `<img src="${imgUrl}" alt="Gallery Image ${index + 1}">`;
+                wrapper.appendChild(slideDiv);
 
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobile-menu');
-        const icon = document.querySelector('#mobile-menu-btn i');
-        menu.classList.toggle('hidden');
-        if (menu.classList.contains('hidden')) { icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); } 
-        else { icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); }
-    }
-</script>
+                const dot = document.createElement('div');
+                dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                dot.onclick = () => goToSlide(index);
+                dotsContainer.appendChild(dot);
+            });
+
+            startAutoPlay();
+        }
+
+        function updateSlider() {
+            const wrapper = document.getElementById('slides-wrapper');
+            const dots = document.querySelectorAll('.dot');
+            wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        function moveSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide >= slideImages.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = slideImages.length - 1;
+            updateSlider();
+            resetAutoPlay();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlider();
+            resetAutoPlay();
+        }
+
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(() => {
+                moveSlide(1);
+            }, 4000);
+        }
+
+        function resetAutoPlay() {
+            clearInterval(autoPlayInterval);
+            startAutoPlay();
+        }
+
+        // --- MODAL & MENU LOGIC ---
+        function openDonateModal() {
+            const overlay = document.getElementById('donate-overlay');
+            const card = document.getElementById('donate-card');
+            document.body.style.overflow = 'hidden';
+            overlay.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                overlay.classList.remove('opacity-0');
+                card.classList.remove('opacity-0', 'scale-95');
+                card.classList.add('scale-100');
+            });
+        }
+
+        function closeDonateModal() {
+            const overlay = document.getElementById('donate-overlay');
+            const card = document.getElementById('donate-card');
+            overlay.classList.add('opacity-0');
+            card.classList.add('opacity-0', 'scale-95');
+            card.classList.remove('scale-100');
+            setTimeout(() => { overlay.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300);
+        }
+
+        // --- NEW: KIT MODAL LOGIC ---
+        function openKitModal() {
+            const overlay = document.getElementById('kit-modal');
+            const img = document.getElementById('kit-image-el');
+            document.body.style.overflow = 'hidden';
+            overlay.classList.remove('hidden');
+
+            requestAnimationFrame(() => {
+                overlay.classList.remove('opacity-0');
+                img.classList.remove('scale-95');
+                img.classList.add('scale-100');
+            });
+        }
+
+        function closeKitModal() {
+            const overlay = document.getElementById('kit-modal');
+            const img = document.getElementById('kit-image-el');
+            overlay.classList.add('opacity-0');
+            img.classList.remove('scale-100');
+            img.classList.add('scale-95');
+
+            setTimeout(() => { overlay.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300);
+        }
+
+        function initMobileMenu() {
+            const btn = document.getElementById('mobile-menu-btn');
+            btn.onclick = () => toggleMobileMenu();
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.querySelector('#mobile-menu-btn i');
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) { icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); }
+            else { icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); }
+        }
+    </script>
 </body>
+
 </html>
