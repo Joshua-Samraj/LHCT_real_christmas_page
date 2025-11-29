@@ -496,7 +496,7 @@
                 let finalScale = Math.min(scaleW, scaleH);
 
                 if (finalScale < 1.2) finalScale = 1.2; 
-                if (finalScale > 6) finalScale = 6; 
+                if (finalScale > 12) finalScale = 12; 
 
                 currentCell.style.transform = `translate(${moveX}px, ${moveY - 130}px) scale(${finalScale})`;
                 currentCell.classList.add('active-pop');
