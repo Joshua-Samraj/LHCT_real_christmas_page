@@ -32,7 +32,7 @@
         margin: 0 auto;
         /* Desktop Default Height */
         height: 50vh;      
-        min-height: 50px;
+        min-height: 30px;
         background: #000;
         border: 1px solid #333;
         border-radius: 12px;
@@ -62,13 +62,15 @@
         
         /* THE IMAGE OVERLAY */
         background-image: url('assets/real.png'); 
-        background-position: center;
+        background-size: 50%;
+        
+        background-position: bottom;
         background-size: contain; /* Keeps the whole image visible */
         background-repeat: no-repeat;
         
         /* Optional: Darken background slightly to make pop clearer */
         background-color: rgba(0,0,0,0.2); 
-        
+        /* opacity: 0.5; */
         z-index: 10; /* Level 2: Sits ON TOP of default images */
     }
 
@@ -121,7 +123,7 @@
         height: auto; 
         display: block; 
         border-radius: 2px;
-        filter: blur(3px) grayscale(50%) brightness(0.6); /* Darker so pop stands out */
+        /* filter: blur(3px) grayscale(50%) brightness(0.6);  */
         transition: filter 0.5s ease, transform 0.5s ease;
     }
 
@@ -173,6 +175,21 @@
         filter: grayscale(0%) !important;
         transform: scale(1.05);
         box-shadow: 0 20px 50px -10px rgba(212, 36, 38, 0.3);
+    }
+
+    /* Mobile Height Adjustments */
+    @media (max-width: 1023px) {
+        .gallery-wrapper { height: 65vh; }
+        
+        /* Update overlay to match mobile height */
+        .gallery-wrapper::before { 
+            height: 65vh; 
+            margin-bottom: -65vh;
+
+            /* --- ADD THIS LINE --- */
+            background-size: 70%;  
+            /* 30% makes it smaller on mobile. Increase/Decrease as needed. */
+        }
     }
 </style>
 </head>
@@ -233,7 +250,7 @@
             <div class="w-full md:w-1/2">
                 <div class="relative">
                     <div class="absolute -inset-4 bg-christmas-red/20 blur-xl rounded-full"></div>
-                    <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1000&auto=format&fit=crop" class="scroll-reveal-img relative rounded-lg shadow-2xl grayscale hover:grayscale-0" alt="Child holding light">
+                    <img src="assets/blind.jpeg" class="scroll-reveal-img relative rounded-lg shadow-2xl grayscale hover:grayscale-0" alt="Child holding light">
                 </div>
             </div>
             <div class="w-full md:w-1/2 space-y-6">
@@ -406,7 +423,7 @@
             cell.appendChild(img);
             
             cell.onclick = (e) => {
-                userClickStop(); 
+                // userClickStop(); 
                 openNetflixModal(cell, imgUrl, i + 1);
             };
             
@@ -436,7 +453,7 @@
         const cells = document.querySelectorAll('.grid-cell');
         const container = document.getElementById('gallery-wrapper');
         
-        if(cells.length === 0) { isSlideshowRunning = false; return; }
+        if(cells.length === 0) { isSlideshowRunning = true; return; }
 
         while (true) {
             // STOP Condition
@@ -481,7 +498,7 @@
                 if (finalScale < 1.2) finalScale = 1.2; 
                 if (finalScale > 6) finalScale = 6; 
 
-                currentCell.style.transform = `translate(${moveX}px, ${moveY}px) scale(${finalScale})`;
+                currentCell.style.transform = `translate(${moveX}px, ${moveY - 130}px) scale(${finalScale})`;
                 currentCell.classList.add('active-pop');
 
                 await new Promise(r => setTimeout(r, 2000));
