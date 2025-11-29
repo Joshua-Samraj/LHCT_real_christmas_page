@@ -22,95 +22,159 @@
         }
     </script>
     
-    <style>
-        body { background-color: #141414; color: white; }
-        html { scroll-behavior: smooth; }
+<style>
+    body { background-color: #141414; color: white; }
+    html { scroll-behavior: smooth; }
+    
+    /* --- CONTAINED GALLERY SECTION --- */
+    .gallery-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        /* Desktop Default Height */
+        height: 50vh;      
+        min-height: 50px;
+        background: #000;
+        border: 1px solid #333;
+        border-radius: 12px;
+        overflow-y: auto;  
+        position: relative; 
+        box-shadow: inset 0 0 50px rgba(0,0,0,0.9);
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    /* --- THE OVERLAY (Using ::before to sit on top of scroll) --- */
+    .gallery-wrapper::before {
+        content: '';
+        /* Sticky makes it stay in view while you scroll */
+        position: sticky; 
+        top: 0;
+        left: 0;
+        width: 100%;
         
-        /* --- CONTAINED GALLERY SECTION --- */
-        .gallery-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            height: 50vh;      /* Fixed height for the container */
-            min-height: 50px;
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 12px;
-            overflow-y: auto;  /* Enable Internal Scroll */
-            position: relative; /* Essential for coordinate calculation */
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.9);
+        /* Height must match the wrapper height */
+        height: 50vh; 
+        
+        /* Pull the grid up so it sits UNDER this overlay */
+        margin-bottom: -50vh; 
+        
+        display: block;
+        pointer-events: none; /* Allows clicks to pass through to images */
+        
+        /* THE IMAGE OVERLAY */
+        background-image: url('assets/real.png'); 
+        background-position: center;
+        background-size: contain; /* Keeps the whole image visible */
+        background-repeat: no-repeat;
+        
+        /* Optional: Darken background slightly to make pop clearer */
+        background-color: rgba(0,0,0,0.2); 
+        
+        z-index: 10; /* Level 2: Sits ON TOP of default images */
+    }
+
+    /* Mobile Height Adjustments */
+    @media (max-width: 1023px) {
+        .gallery-wrapper { height: 65vh; }
+        
+        /* Update overlay to match mobile height */
+        .gallery-wrapper::before { 
+            height: 65vh; 
+            margin-bottom: -65vh;
         }
+    }
 
-        .gallery-wrapper::-webkit-scrollbar { width: 8px; }
-        .gallery-wrapper::-webkit-scrollbar-track { background: #111; }
-        .gallery-wrapper::-webkit-scrollbar-thumb { background: #D42426; border-radius: 4px; }
+    .gallery-wrapper::-webkit-scrollbar { width: 8px; }
+    .gallery-wrapper::-webkit-scrollbar-track { background: #111; }
+    .gallery-wrapper::-webkit-scrollbar-thumb { background: #D42426; border-radius: 4px; }
 
-        /* --- MASONRY LAYOUT --- */
-        .hero-grid-container {
-            column-count: 15; 
-            column-gap: 4px; 
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            padding-bottom: 100px;
-            /* Height is controlled by wrapper now */
-        }
+    /* --- MASONRY LAYOUT --- */
+    .hero-grid-container {
+        column-count: 12; /* Mobile friendly */
+        column-gap: 4px; 
+        width: 100%;
+        padding: 5px; 
+        box-sizing: border-box;
+        padding-bottom: 100px;
+    }
 
-        @media (min-width: 768px) { .hero-grid-container { column-count: 10; } }
-        @media (min-width: 1024px) { .hero-grid-container { column-count: 15; } }
+    @media (min-width: 640px) { .hero-grid-container { column-count: 6; } }
+    @media (min-width: 1024px) { .hero-grid-container { column-count: 15; padding: 10px; } }
 
-        .grid-cell {
-            break-inside: avoid; 
-            margin-bottom: 4px;
-            position: relative;
-            cursor: pointer;
-            border-radius: 2px;
-            overflow: hidden;
-            opacity: 0;
-            transform: scale(0.8) translate(0,0);
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease; 
-            will-change: transform;
-        }
+    .grid-cell {
+        break-inside: avoid; 
+        margin-bottom: 4px;
+        position: relative; 
+        cursor: pointer;
+        border-radius: 2px;
+        overflow: hidden;
+        opacity: 0;
+        transform: scale(0.8) translate(0,0);
+        transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease; 
+        will-change: transform;
+        
+        z-index: 1; /* Level 1: Default (Below Overlay) */
+    }
 
-        .grid-cell img { width: 100%; height: auto; display: block; border-radius: 2px; }
+    /* --- 1. DEFAULT BLURRED STATE --- */
+    .grid-cell img { 
+        width: 100%; 
+        height: auto; 
+        display: block; 
+        border-radius: 2px;
+        filter: blur(3px) grayscale(50%) brightness(0.6); /* Darker so pop stands out */
+        transition: filter 0.5s ease, transform 0.5s ease;
+    }
 
+    /* --- HOVER STATE (Desktop Only) --- */
+    @media (hover: hover) {
         .grid-cell:hover {
             transform: scale(1.5); 
-            z-index: 50; 
+            z-index: 50; /* Level 3: Pops ABOVE Overlay */
             box-shadow: 0 10px 20px rgba(0,0,0,0.8);
             outline: 2px solid white; 
             transition-delay: 0.1s;
         }
         
-        .grid-cell.loaded { opacity: 1; transform: scale(1); }
-        
-        /* ACTIVE POP STATE */
-        .grid-cell.active-pop {
-            z-index: 100;
-            box-shadow: 0 50px 100px -12px rgba(0, 0, 0, 1);
-            outline: 0px solid #D42426; 
-            transition-delay: 0s !important; 
+        .grid-cell:hover img {
+            filter: blur(0) grayscale(0%) brightness(1);
         }
+    }
 
-        /* --- OTHER CSS --- */
-        .impact-card { transition: all 0.5s ease; }
-        .impact-card.mobile-active {
-            border-color: var(--card-color) !important;
-            transform: scale(1.02); 
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-        }
-        .impact-card.mobile-active .icon-box { background-color: var(--card-color) !important; }
+    .grid-cell.loaded { opacity: 1; transform: scale(1); }
+    
+    /* --- 3. ACTIVE POP STATE (Auto Play) --- */
+    .grid-cell.active-pop {
+        z-index: 50; /* Level 3: Pops ABOVE Overlay */
+        box-shadow: 0 50px 100px -12px rgba(0, 0, 0, 1);
+        outline: 0px solid #D42426; 
+        transition-delay: 0s !important; 
+    }
 
-        .scroll-reveal-img {
-            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
-            filter: grayscale(100%);
-            transform: scale(1);
-        }
-        .scroll-reveal-img.mobile-active {
-            filter: grayscale(0%) !important;
-            transform: scale(1.05);
-            box-shadow: 0 20px 50px -10px rgba(212, 36, 38, 0.3);
-        }
-    </style>
+    /* Remove blur when Active Pop */
+    .grid-cell.active-pop img {
+        filter: blur(0) grayscale(0%) brightness(1);
+    }
+
+    /* --- OTHER CSS --- */
+    .impact-card { transition: all 0.5s ease; }
+    .impact-card.mobile-active {
+        border-color: var(--card-color) !important;
+        transform: scale(1.02); 
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    .impact-card.mobile-active .icon-box { background-color: var(--card-color) !important; }
+
+    .scroll-reveal-img {
+        transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+        filter: grayscale(100%);
+        transform: scale(1);
+    }
+    .scroll-reveal-img.mobile-active {
+        filter: grayscale(0%) !important;
+        transform: scale(1.05);
+        box-shadow: 0 20px 50px -10px rgba(212, 36, 38, 0.3);
+    }
+</style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
@@ -370,7 +434,6 @@
                     // 2. Calculate Center of the CONTAINER (Not the Window)
                     const containerCenterX = containerRect.left + (containerRect.width / 2);
                     const containerCenterY = containerRect.top + (containerRect.height / 2);
-
                     const cellCenterX = rect.left + (rect.width / 2);
                     const cellCenterY = rect.top + (rect.height / 2);
 
